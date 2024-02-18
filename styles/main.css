@@ -1,34 +1,109 @@
-@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
-
 :root {
   --color-red: #e42026;
   --color-blue: #1434fb;
   --color-black: #222222;
+  --arcade-font: "Press Start 2P";
 }
 
 * {
   box-sizing: border-box;
   background-color: var(--color-black);
+  color: white;
+  /* font-size: 10px; */
 }
 
 body {
   margin: 0 auto;
-  width: 70%;
-  font-family: ;
+  width: 90%;
+  font-family: var(--arcade-font);
+  height: 100vh;
 }
 
-#packman {
-  max-width: 500px;
+/* Header bit (log + score board) */
+header {
+  text-align: center;
+  width: 100%;
+}
+#packman-logo {
+  display: block;
+  margin: 0 auto;
+  max-width: 400px;
 }
 
 h2 {
   color: var(--color-red);
   text-align: center;
+  font-size: large;
+  margin-top: 0;
+  margin-bottom: 40px;
 }
 
 #lives-score {
   color: var(--color-red);
-  width: 60%;
+  font-size: 12px;
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
+
+.board-score {
+  padding: 20px 30px;
+}
+
+/* GRID SECTION */
+.grid-wrapper {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.grid {
+  align-items: center;
+  box-shadow: 0 0 40px 0 var(--color-blue);
+  border: 12px solid var(--color-blue);
+  border-radius: 20px;
+  border-style: double;
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+  justify-content: center;
+  height: 500px;
+  width: 1000px;
+}
+.grid div {
+  border: 1px solid grey;
+  flex-grow: 1;
+  height: 10%;
+  width: 5%;
+  font-size: 8px;
+}
+
+/* Add Pacman Visual */
+.grid div.pacman {
+  background-image: url("../img/pacman-asset.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+/* Add Ghost Visual * 4 (if can be refactored, do) : 
+Maybe resort to the audio HW, on how to get each sound to play*/
+.grid div.ghost {
+  background-image: url("../img/");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+/* Add Small pallets to grid */
+.grid div.dots {
+  background-image: url("../img/pallet_small.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+/* Add border Visual */
+
+/* Add fruits + Pallet + dots */
+
+/* EXTRA MILE : Add Animation to PackMan, so that he turns depending on the direction he is going in  */
