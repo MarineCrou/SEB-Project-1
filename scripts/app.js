@@ -4,8 +4,17 @@ const height = 20;
 
 const cellCount = height * width;
 const cells = [];
+
+// VARIABLES :
+// character positions
 let pacmanCurrentPosition = 127;
+let blinkyStartPosition = 89;
+let pinkyStartPosition = 69;
+let inkyStartPosition = 70;
+let clydeStartPosition = 90;
+
 let ghostsStartPosition = [88, 89, 90];
+
 let dottedCells;
 
 // defining blocks:
@@ -29,6 +38,11 @@ function createGrid() {
   });
 
   addPacman(pacmanCurrentPosition);
+  addGhosts(blinkyStartPosition);
+  addGhosts(pinkyStartPosition);
+  addGhosts(clydeStartPosition);
+  addGhosts(inkyStartPosition);
+
   //=> Add a setTimer, to delay launch of 2/4 ghost
 }
 createGrid();
@@ -43,43 +57,48 @@ function removePacman(position) {
   cells[position].classList.remove("pacman");
 }
 
-// 2. Add pallets to all cells Except cells that have blocks
-// dottedCells = cells.filter((element) => {
-//     return (
-//       !element.classList.contains("walls") ||
-//       !element.classList.contains("gCells") ||
-//       !element.classList.contains("aCells") ||
-//       !element.classList.contains("ghostCell")
-//     );
-//   })
-//   .map((element) => element.dataset.index);
-
-// dottedCells.forEach((index) => {
-//   cells[index].classList.add("dots");
-// });
-
-function createDottedCells() {
-  cells.forEach((cell, index) => {
-    if (
-      index !== pacmanCurrentPosition &&
-      index === walls
-      // !cells.classList.contains("blocks-red")
-    ) {
-      cell.classList.add("dots");
-      console.log(walls);
-    }
-  });
+//Adding 4 Ghosts
+function createGhosts(position, className) {
+  cells[position].classList.add(className);
 }
-createDottedCells();
 
-// 3. Add blocks to the grid
+function addGhosts() {
+  createGhosts(blinkyStartPosition, "ghost-blinky");
+  createGhosts(clydeStartPosition, "ghost-clyde");
+  createGhosts(inkyStartPosition, "ghost-inky");
+  createGhosts(pinkyStartPosition, "ghost-pinky");
+}
+addGhosts();
+
+// Remove Ghosts -> inspiration -> IF pacman eats a ghost, remove ghost
+// function startGame() {
+//   if (!isPlaying) {
+//     isPlaying = !isPlaying;
+//     timer = setInterval(() => {
+//       // wasHit will either be true or undefined
+//       const wasHit = removeMole();
+//       console.log("the mole was hit:", wasHit);
+//       addMole();
+//       if (!wasHit) {
+//         lives--;
+
+//         if (!lives) {
+//           endGame();
+//         }
+
+//         livesDisplay.innerHTML = lives ? "❤️".repeat(lives) : "☠️";
+//       }
+//     }, gameSpeed);
+//   }
+// }
+// 4.3 Create a Class for Ghosts*4 with starting point their "prison"
+
+// Add blocks to the grid
 function applyBlockStyle(cellIndices, className) {
   cellIndices.forEach((index) => {
     cells[index].classList.add(className);
-    //if statement
   });
 }
-
 function blockCells() {
   applyBlockStyle(walls, "blocks-blue");
   applyBlockStyle(gCells, "blocks-red");
@@ -88,8 +107,29 @@ function blockCells() {
   applyBlockStyle(ghostGateCells, "ghost-gates");
 }
 blockCells();
+//STILL NEED TO MAKE THE BLOCK SOLID
 
-// 2.1 Adding borders to the game, so pacman or ghosts can't disapear from grid
+// 2. Add pellets to all cells Except For : cells that have blocks & Pacman
+function createDottedCells() {
+  cells.forEach((cell, index) => {
+    if (
+      index !== pacmanCurrentPosition &&
+      index !== blinkyStartPosition &&
+      index !== pinkyStartPosition &&
+      index !== clydeStartPosition &&
+      index !== inkyStartPosition &&
+      !walls.includes(index) &&
+      !gCells.includes(index) &&
+      !aCells.includes(index) &&
+      !ghostCell.includes(index)
+    ) {
+      cell.classList.add("dots");
+    }
+  });
+}
+createDottedCells();
+
+//Adding borders to the game, so pacman or ghosts can't disapear from grid
 function handleKeyDown(event) {
   removePacman(pacmanCurrentPosition);
   // left is 37 //
@@ -112,39 +152,12 @@ function handleKeyDown(event) {
     pacmanCurrentPosition += height;
   }
   addPacman(pacmanCurrentPosition);
-
-  console.log(`Cat current position ${pacmanCurrentPosition}`);
+  console.log(`pacman current position ${pacmanCurrentPosition}`);
 }
 document.addEventListener("keydown", handleKeyDown);
 
-// 3.1 How to disable blocks from being gone through
+//How to disable blocks from being gone through
 
-// 4.1 // Adding 1 Ghost
-function addGhosts(position) {
-  cells[position].classList.add("ghosts");
-}
-// 4.2 remove Ghosts -> inspiration -> IF pacman eats a ghost, remove ghost
-// function startGame() {
-//   if (!isPlaying) {
-//     isPlaying = !isPlaying;
-//     timer = setInterval(() => {
-//       // wasHit will either be true or undefined
-//       const wasHit = removeMole();
-//       console.log("the mole was hit:", wasHit);
-//       addMole();
-//       if (!wasHit) {
-//         lives--;
-
-//         if (!lives) {
-//           endGame();
-//         }
-
-//         livesDisplay.innerHTML = lives ? "❤️".repeat(lives) : "☠️";
-//       }
-//     }, gameSpeed);
-//   }
-// }
-// 4.3 Create a Class for Ghosts*4 with starting point their "prison"
 // 4.4 Add a delay - for ghosts coming out of their section
 // 6. figure out how to delete a pallet/fruit once packman is on the same cell (look at whack a mole)
 // 7. Have lives be discounted when looses
