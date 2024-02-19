@@ -7,7 +7,6 @@ const cells = [];
 let pacmanCurrentPosition = 50;
 let ghostsCurrentPosition = [88, 89, 90];
 let dottedCells = [];
-let condemnedCells = [];
 
 //creating the grid framework : 20w*10h
 function createGrid() {
@@ -18,7 +17,7 @@ function createGrid() {
     cells.push(cell);
   });
   addPacman(pacmanCurrentPosition);
-  createDottedCells();
+  // createDottedCells();
   //=> Add a setTimer, to delay launch of 2/4 ghost
 }
 createGrid();
@@ -60,14 +59,14 @@ function removePacman(position) {
 // }
 
 // 1.4. Add pallets to all cells
-// function createDottedCells() {
-//   cells.forEach((cell, index) => {
-//     if (index !== pacmanCurrentPosition) {
-//       cell.classList.add("dots");
-//     }
-//   });
-// }
-// createDottedCells();
+function createDottedCells() {
+  cells.forEach((cell, index) => {
+    if (index !== pacmanCurrentPosition) {
+      cell.classList.add("dots");
+    }
+  });
+}
+createDottedCells();
 
 // 2. Adding borders to the game, so pacman or ghosts can't disapear from grid
 function handleKeyDown(event) {
@@ -98,25 +97,39 @@ function handleKeyDown(event) {
 document.addEventListener("keydown", handleKeyDown);
 
 // 4. Create blocks, by creating a harcoded array of blocks => for loop that goes through them. Could use an array as well ?
-function condemnedBlocked() {
-  for (let i = 0; i < condemnedCells.length; i++) {
-    console.log("This is part of a block element");
-    cells.classList.add("dots");
-  }
+let gridData = {
+  rest: [
+    3, 4, 7, 8, 11, 12, 14, 15, 16, 21, 28, 29, 31, 38, 60, 61, 79, 78, 120,
+    121, 139, 138, 148, 149, 150, 151, 161, 162, 165, 168, 169, 170, 171, 173,
+    174, 175, 177, 178, 184, 185, 186, 195,
+  ],
+  gCells: [43, 44, 45, 46, 63, 83, 85, 86, 103, 106, 123, 124, 125, 126],
+  aCells: [53, 54, 55, 56, 73, 76, 93, 94, 95, 96, 113, 116, 133, 136],
+  ghostCells: [68, 69, 70, 71, 88, 91, 108, 109, 110, 111],
+};
+
+// loop through the array of cells to
+function applyClassesToCells(cellIndices, className) {
+  cellIndices.forEach((index) => {
+    cells[index].classList.add(className);
+  });
+  cells.classList.remove("createDottedCells");
 }
 
-//  function createDottedCells() {
-//   cells.forEach((cell, index) => {
-//     if (index !== pacmanCurrentPosition) {
-//       cell.classList.add("dots");
-//     }
-//   });
-// }
+function blockCells() {
+  applyClassesToCells(gridData.rest, "blocks-blue");
+  applyClassesToCells(gridData.gCells, "blocks-red");
+  applyClassesToCells(gridData.aCells, "blocks-red");
+  applyClassesToCells(gridData.ghostCells, "ghost-cells");
+}
+
+blockCells();
 
 // 5. Create a Class for Ghosts*4 with starting point their "prison"
 // 5.1. Add a delay - for ghosts coming out of their section
 // 6. figure out how to delete a pallet/fruit once packman is on the same cell (look at whack a mole)
 // 7. Have lives be discounted when looses
+// 8. Add a Start Button / Starts game
 
 /* to get ghosts to move in random position : control flow of direction - Based on index position of ghost */
 /* trace an array of the cells i would to be a barrier */
