@@ -35,7 +35,27 @@ h2 {
   text-align: center;
   font-size: large;
   margin-top: 0;
-  margin-bottom: 40px;
+  margin-bottom: 5px;
+}
+button {
+  font-family: var(--arcade-font);
+  box-shadow: 0 0 40px 0 var(--color-blue);
+  border: 12px solid var(--color-blue);
+  border-style: double;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px 0px 40px;
+  cursor: pointer;
+}
+button:hover {
+  font-family: var(--arcade-font);
+  box-shadow: 0 0 40px 0 var(--color-red);
+  border: 12px solid var(--color-red);
+  border-style: double;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 20px 0px 40px;
+  cursor: pointer;
 }
 
 #lives-score {
@@ -48,14 +68,6 @@ h2 {
 
 .board-score {
   padding: 20px 30px;
-}
-
-#start-button {
-  background-image: url("../img/start-button.png");
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  cursor: pointer;
 }
 
 /* GRID SECTION */
@@ -75,8 +87,8 @@ h2 {
   flex-wrap: wrap;
   height: 100%;
   justify-content: center;
-  height: 600px;
-  width: 1000px;
+  height: 400px;
+  width: 800px;
 }
 .grid div {
   border: 0.3px solid var(--color-black);
@@ -94,12 +106,12 @@ h2 {
   background-position: center;
 }
 
-/* Add Small pallets to grid */
+/* Add pallets to grid */
 .grid div.dots {
-  background-image: url("../img/pallet_small.png");
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+  background-image: radial-gradient(#febb96 12%, #0000 10%);
+}
+.grid div.power-dots {
+  background-image: radial-gradient(#f0a57c 24%, #0000 10%);
 }
 
 /* Add blocks to grid */
@@ -116,41 +128,40 @@ h2 {
 }
 
 .grid div.ghost-gates {
-  border-top: 0.3px solid var(--color-blue);
+  border-top: 0.3px solid var(--color-red);
   border-radius: 3px;
 }
 
-/* Add Ghost Visual * 4 (if can be refactored, do) : 
-Maybe resort to the audio HW, on how to get each sound to play*/
+/* Add Ghosts * 4 (if can be refactored, do) */
 .grid div.ghost-blinky {
   background-image: url("../img/blinky.png");
   background-repeat: no-repeat;
-  background-size: 50%;
+  background-size: 60%;
   background-position: center;
 }
 .grid div.ghost-clyde {
   background-image: url("../img/clyde.png");
   background-repeat: no-repeat;
-  background-size: 50%;
+  background-size: 60%;
   background-position: center;
 }
 .grid div.ghost-inky {
   background-image: url("../img/inky.png");
   background-repeat: no-repeat;
-  background-size: 50%;
+  background-size: 60%;
   background-position: center;
 }
 .grid div.ghost-pinky {
   background-image: url("../img/pinky.png");
   background-repeat: no-repeat;
-  background-size: 50%;
+  background-size: 60%;
   background-position: center;
 }
 
 .grid div.ghost-blue {
   background-image: url("../img/blue_ghost.png");
   background-repeat: no-repeat;
-  background-size: 50%;
+  background-size: 60%;
   background-position: center;
 }
 /* Add border Visual */
