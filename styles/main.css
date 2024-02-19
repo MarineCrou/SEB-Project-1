@@ -69,8 +69,8 @@ h2 {
   align-items: center;
   box-shadow: 0 0 40px 0 var(--color-blue);
   border: 12px solid var(--color-blue);
-  border-radius: 20px;
   border-style: double;
+  border-radius: 20px;
   display: flex;
   flex-wrap: wrap;
   height: 100%;
@@ -114,24 +114,18 @@ Maybe resort to the audio HW, on how to get each sound to play*/
 /* Add blocks to grid */
 .grid div.blocks-blue {
   background-color: var(--color-blue);
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
   border: 1px solid var(--color-black);
   border-radius: 3px;
 }
 
 .grid div.blocks-red {
   background-color: var(--color-red);
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
   border: 0.3px solid var(--color-black);
   border-radius: 3px;
 }
 
-.grid div.ghost-cells {
-  border: 0.3px solid var(--color-blue);
+.grid div.ghost-gates {
+  border-top: 0.3px solid var(--color-blue);
   border-radius: 3px;
 }
 
