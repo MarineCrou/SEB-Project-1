@@ -128,8 +128,9 @@ button:hover {
 }
 
 .grid div.ghost-gates {
-  border-top: 0.3px solid var(--color-red);
+  border-top: 4px solid var(--color-red);
   border-radius: 3px;
+  border-style: double;
 }
 
 /* Add Ghosts * 4 (if can be refactored, do) */

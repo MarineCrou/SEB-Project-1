@@ -21,10 +21,10 @@ const cells = [];
 let pacmanCurrentPosition = 127;
 
 // Ghosts
-const blinkyStartPosition = 89;
-const pinkyStartPosition = 69;
-const inkyStartPosition = 70;
-const clydeStartPosition = 90;
+let blinkyStartPosition = 89;
+let pinkyStartPosition = 69;
+let inkyStartPosition = 70;
+let clydeStartPosition = 90;
 
 // ghosts are eadible
 const blueGhost = false;
@@ -42,6 +42,7 @@ const walls = [
 const gCells = [43, 44, 45, 46, 63, 83, 85, 86, 103, 106, 123, 124, 125, 126];
 const aCells = [53, 54, 55, 56, 73, 76, 93, 94, 95, 96, 113, 116, 133, 136];
 const ghostCell = [68, 71, 88, 91, 108, 109, 110, 111];
+const cellCells = [69, 70, 89, 90];
 const ghostGateCells = [69, 70];
 
 // pacman dies
@@ -76,55 +77,39 @@ function createGrid() {
 }
 createGrid();
 
-// Next Steps :
-// 1.1. Adding pacman to the board
+// ADD pacman to the board
 function addPacman(position) {
   cells[position].classList.add("pacman");
 }
-// 1.2.removing pacman
+// REMOVE pacman
 function removePacman(position) {
   cells[position].classList.remove("pacman");
 }
 
-//Add 4 Ghosts
+//ADD Ghosts * 4
 function createGhosts(position, className) {
   cells[position].classList.add(className);
 }
 
 function addGhosts() {
-  createGhosts(blinkyStartPosition, "ghost-blinky");
-  createGhosts(clydeStartPosition, "ghost-clyde");
-  createGhosts(inkyStartPosition, "ghost-inky");
-  createGhosts(pinkyStartPosition, "ghost-pinky");
+  let blinky = createGhosts(blinkyStartPosition, "ghost-blinky");
+  let clyde = createGhosts(clydeStartPosition, "ghost-clyde");
+  let inky = createGhosts(inkyStartPosition, "ghost-inky");
+  let pinky = createGhosts(pinkyStartPosition, "ghost-pinky");
 }
 addGhosts();
 
-// REMOVE Ghosts -> inspiration -> IF pacman eats a ghost, remove ghost
-// ghost move randomly -> through a setInterval
-//  => setTimer to delay launch of 2/4 ghost
-// function startGame() {
-//   if (!isPlaying) {
-//     isPlaying = !isPlaying;
-//     timer = setInterval(() => {
-//       // wasHit will either be true or undefined
-//       const wasHit = removeMole();
-//       console.log("the mole was hit:", wasHit);
-//       addMole();
-//       if (!wasHit) {
-//         lives--;
+function deleteGhosts(ghostPosition, className) {
+  cells[ghostPosition].classList.remove(className);
+}
+function removeGhosts() {
+  deleteGhosts(clydeStartPosition, "ghost-clyde");
+  deleteGhosts(blinkyStartPosition, "ghost-blinky");
+  deleteGhosts(pinkyStartPosition, "ghost-pinky");
+  deleteGhosts(inkyStartPosition, "ghost-inky");
+}
 
-//         if (!lives) {
-//           endGame();
-//         }
-
-//         livesDisplay.innerHTML = lives ? "❤️".repeat(lives) : "☠️";
-//       }
-//     }, gameSpeed);
-//   }
-// }
-// Create a Class for Ghosts*4 with starting point their "prison"
-
-// Add blocks to the grid
+// ADD BLOCKS/WALLS
 function applyBlockStyle(cellIndices, className) {
   cellIndices.forEach((index) => {
     cells[index].classList.add(className);
@@ -138,11 +123,111 @@ function blockCells() {
   applyBlockStyle(ghostGateCells, "ghost-gates");
 }
 blockCells();
-//STILL NEED TO MAKE BLOCKS SOLID, so can't be gone through
 
-// 2. Add pellets to all cells Except For : cells that have blocks & Pacman
-// Add PowerDots
+// GHOSTS
+// Prevent Ghost form going into walls
+// probably a Math.floor(Math.random()) => for ghost random direction
+// class function ? -> Set the wall boundries + Blocks with Function ??
+// For random movement : Need a setInterval + SeTimer (to delay ghosts from leaving at the same time )
+// need to ensure ghosts leave their "prison" first
 
+//ADD Ghosts * 4
+
+let ghosts = [
+  { position: blinkyStartPosition, className: "ghost-blinky" },
+  { position: clydeStartPosition, className: "ghost-clyde" },
+  { position: inkyStartPosition, className: "ghost-inky" },
+  { position: pinkyStartPosition, className: "ghost-pinky" },
+];
+
+function moveGhosts() {
+  ghosts.forEach((ghost) => {
+    // for each ghost in the array, we want it to move
+    // IF there are no walls, no borders => move forward
+    // Else go in different direction
+    const directions = [-1, +1, -height, +height];
+    const direction = directions[Math.floor(Math.random() * directions.length)];
+    let nextPosition = ghost.position + direction;
+
+    if (
+      !walls.includes(nextPosition) &&
+      !gCells.includes(nextPosition) &&
+      !aCells.includes(nextPosition) &&
+      !ghostCell.includes(nextPosition) &&
+      nextPosition >= 0 &&
+      nextPosition < cellCount &&
+      !(nextPosition % width === height - 1) &&
+      !(nextPosition % height === 0)
+    ) {
+      removeGhosts(ghost.position, ghost.className);
+      ghost.position = nextPosition;
+      addGhosts(ghost.position, ghost.className);
+    }
+    // else {
+    //   does there need to be an else ?
+    //   Could the Else be => if on same cell as pacman => kills pacman
+    // }
+    console.log(`Ghost position ${ghost.className} is in${ghost.position}`);
+    return ghosts.className;
+  });
+}
+
+// iterate through the function // Set an interval for moving the ghosts
+ghosts.forEach((ghost) => {
+  setInterval(() => {
+    moveGhosts(ghost);
+  }, 1000);
+});
+
+// setTimeout(() => moveGhosts(ghosts.position, ghosts.className), 1000);
+
+// Move Pacman
+function movePacman(event) {
+  let pacmanNewPosition = pacmanCurrentPosition;
+  // check if the next position is a wall or not before allowing the move of pacman
+  // left is 37 //
+  if (event.keyCode === 37) {
+    pacmanNewPosition = pacmanCurrentPosition - 1;
+    // up is 38
+  } else if (event.keyCode === 38) {
+    pacmanNewPosition = pacmanCurrentPosition - height;
+    // right is 39
+  } else if (event.keyCode === 39) {
+    pacmanNewPosition = pacmanCurrentPosition + 1;
+    // down is 40
+  } else if (event.keyCode === 40) {
+    pacmanNewPosition = pacmanCurrentPosition + height;
+  }
+  // function to iterate through the conditions to see if obstacle (is the next move a wall or ghost ?)
+  if (
+    // check for walls
+    // pacman
+    !walls.includes(pacmanNewPosition) &&
+    !gCells.includes(pacmanNewPosition) &&
+    !aCells.includes(pacmanNewPosition) &&
+    !ghostCell.includes(pacmanNewPosition) &&
+    // check for border :
+    // Top border
+    pacmanNewPosition >= 0 &&
+    // bottom border
+    pacmanNewPosition < cellCount &&
+    // right border
+    !(
+      event.pacmanNewPosition === 37 && pacmanNewPosition % width === height - 1
+    ) &&
+    // left border
+    !(event.keyCode === 39 && pacmanNewPosition % height === 0)
+  ) {
+    removePacman(pacmanCurrentPosition);
+    pacmanCurrentPosition = pacmanNewPosition;
+    addPacman(pacmanCurrentPosition);
+  }
+  console.log(`pacman current position ${pacmanCurrentPosition}`);
+}
+document.addEventListener("keydown", movePacman);
+
+// ADD DOTS
+// Dots (Except For cells that have blocks & Pacman & Ghosts)
 function createDottedCells() {
   cells.forEach((cell, index) => {
     if (
@@ -164,7 +249,7 @@ function createDottedCells() {
 }
 createDottedCells();
 
-// add power dots
+// POWER dots
 function addPowerDots() {
   powerDotCells.forEach((position) => {
     if (cells[position]) {
@@ -174,46 +259,6 @@ function addPowerDots() {
   });
 }
 addPowerDots();
-
-//Adding borders to the game, so pacman or ghosts can't disapear from grid
-function movePacman(event) {
-  let pacmanNewPosition = pacmanCurrentPosition;
-
-  // check if the next position is a wall or not before allowing the move of pacman
-  // left is 37 //
-  if (event.keyCode === 37) {
-    pacmanNewPosition = pacmanCurrentPosition - 1;
-    // up is 38
-  } else if (event.keyCode === 38) {
-    pacmanNewPosition = pacmanCurrentPosition - height;
-    // right is 39
-  } else if (event.keyCode === 39) {
-    pacmanNewPosition = pacmanCurrentPosition + 1;
-    // down is 40
-  } else if (event.keyCode === 40) {
-    pacmanNewPosition = pacmanCurrentPosition + height;
-  }
-  // function to iterate through the conditions to see if obstacle (is the next move a wall or ghost ?)
-  if (
-    !walls.includes(pacmanNewPosition) &&
-    !gCells.includes(pacmanNewPosition) &&
-    !aCells.includes(pacmanNewPosition) &&
-    !ghostCell.includes(pacmanNewPosition) &&
-    pacmanNewPosition >= 0 && // Check for top boundary
-    pacmanNewPosition < cellCount && // Check for bottom boundary
-    !(
-      event.pacmanNewPosition === 37 && pacmanNewPosition % width === height - 1
-    ) && // Check for left boundary
-    !(event.keyCode === 39 && pacmanNewPosition % height === 0)
-  ) {
-    // Check for right boundary
-    removePacman(pacmanCurrentPosition); // Remove Pac-Man from current position
-    pacmanCurrentPosition = pacmanNewPosition; // Update Pac-Man's position
-    addPacman(pacmanCurrentPosition); // Add Pac-Man to new position
-  }
-  console.log(`pacman current position ${pacmanCurrentPosition}`);
-}
-document.addEventListener("keydown", movePacman);
 
 //How to disable blocks from being gone through
 
@@ -302,5 +347,5 @@ function pacmanEats(edibleItem, score) {
 //   }
 // }
 // add event listener :
-button.addEventListener("click", playGame);
-resetButton.addEventListener("click", reset);
+// button.addEventListener("click", playGame);
+// resetButton.addEventListener("click", reset);
