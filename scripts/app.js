@@ -6,7 +6,7 @@
 const scoreDisplay = document.querySelector(".player-score-number");
 const liveCount = document.querySelector(".live-count");
 const highestScore = document.querySelector(".highest-score-number");
-const startGame = document.querySelector("button");
+const startedGame = document.querySelector("button");
 
 // VARIABLES :
 // Grid Variables
@@ -21,6 +21,7 @@ const cells = [];
 let pacmanCurrentPosition = 127;
 
 // Ghosts
+
 let blinkyStartPosition = 89;
 let pinkyStartPosition = 69;
 let inkyStartPosition = 70;
@@ -145,8 +146,6 @@ let ghosts = [
   { position: pinkyStartPosition, className: "ghost-pinky" },
 ];
 
-class ghostfactory {}
-
 function moveGhosts() {
   ghosts.forEach((ghost) => {
     // for each ghost in the array, we want it to move
@@ -169,18 +168,17 @@ function moveGhosts() {
       removeGhosts(ghost.position, ghost.className);
       ghost.position = nextPosition;
       addGhosts(ghost.position, ghost.className);
+      console.log(`Ghost position ${ghost.className} is in${ghost.position}`);
     }
     // else {
     //   does there need to be an else ?
     //   Could the Else be => if on same cell as pacman => kills pacman
     // }
-    console.log(`Ghost position ${ghost.className} is in${ghost.position}`);
-    return ghosts.className;
   });
 }
 
 // iterate through the function // Set an interval for moving the ghosts
-ghosts.forEach((ghost) => {
+let ghostInterval = ghosts.forEach((ghost) => {
   setInterval(() => {
     moveGhosts(ghost);
   }, 1000);
@@ -267,7 +265,76 @@ function addPowerDots() {
 }
 addPowerDots();
 
-//How to disable blocks from being gone through
+// PACMAN EATS
+function eatDot(position) {
+  if (cells[position].classList.contains("dots")) {
+    cells[position].classList.remove("dots");
+    playerScore += dotPoints;
+    addPacman();
+  }
+}
+
+function eatPowerDot(position) {
+  if (cells[position].classList.contains("power-dots")) {
+    cells[position].classList.remove("power-dots");
+    playerScore += powerDotPoints;
+    addPacman();
+  }
+}
+
+// function eatsGhosts(position) {
+//   if (cells[position].classList.contains("power-dots")) {
+//     cells[position].classList.remove("power-dots");
+//     playerScore += powerDotPoints;
+//     addPacman();
+//   }
+// }
+
+// COLLISON DETECTION
+function pacmanColidedGhost() {
+  let collisionDetected = false;
+  // Check if Pac-Man's position = any of the ghosts' positions
+  ghosts.forEach((ghost) => {
+    if (pacmanCurrentPosition === ghost.position) {
+      console.log(`bumped into a ${ghost.className}`);
+      collisionDetected = true;
+      manageCollision();
+    }
+  });
+  return collisionDetected;
+}
+
+function manageCollision() {
+  // Decrease lives, restart level, or end game, etc.
+  lives -= 1;
+  console.log(`Lives left: ${lives}`);
+  if (lives <= 0) {
+    console.log("Game Over");
+    endGame();
+  } else {
+    resetPositions();
+  }
+}
+function resetPositions() {
+  // reset pacman position
+  cells[pacmanCurrentPosition].classList.remove("pacman");
+  // add pacman to original position :
+  pacmanCurrentPosition = 127;
+  cells[pacmanCurrentPosition].classList.add("pacman");
+  // reset Ghosts
+  let ghostInitialPosition = [
+    { ghostName: blinkyStartPosition, startPosition: 89 },
+    { ghostName: pinkyStartPosition, startPosition: 69 },
+    { ghostName: inkyStartPosition, startPosition: 70 },
+    { ghostName: clydeStartPosition, startPosition: 90 },
+  ];
+  ghosts.forEach((ghost) => {
+    cells[ghost.currentPosition].classList.remove(ghost.className);
+    ghost.currentPosition = ghost.ghostInitialPosition;
+    cells[ghost.currentPosition].classList.add(ghost.className);
+    console.log(ghost.initialPosition);
+  });
+}
 
 // Add a delay - for ghosts coming out of their section
 // Add a Start Button / Starts game !!
@@ -278,11 +345,10 @@ addPowerDots();
 /* trace an array of the cells i would to be a barrier */
 
 // PLAY GAME !!
-// Reset Game -> Function to reset the game when player Looses
 
-// reset is very similar to startGame => could be the same function
+// Reset Game (when Player Looses)
 function reset() {
-  // clear interval
+  clearInterval(ghostInterval);
   // display player's score
   playerScore = 0;
   scoreDisplay.textContent = playerScore;
@@ -299,63 +365,52 @@ function reset() {
   startGame();
 }
 
-// Pacman Eats (fruit, dots, powerDots, Ghosts)
-function pacmanEats(edibleItem, score) {
-  playerScore += score;
-  removePowerDot();
-  addPacman();
-}
-
-// Start Button
+// Start Game !!
 // when player clicks on start, launch game & free Ghosts
-// create function, which launches the game :
+// If player is playing (clicked the start button):
+// Ghosts should start moving
+// function should check for lives
+// pacman should start moving and eat dots, powerdots + fruits(if i get to that one)
+// scoreboard should update according to what is eaten (eats dots, powerdots + fruits + ghosts)
 
-if (cells[newPosition].contains(ghosts)) {
+function startGame() {
+  if (!isPlaying) {
+    isPlaying = true;
+    console.log("Game has started");
+
+    let eatsGhost = removeEatenGhost();
+    console.log("the game has started");
+    // pacman Eats
+    if (cells[pacmanNewPosition].classList.contains("dots")) {
+      eatDots();
+    } else if (cells[pacmanNewPosition].classList.contains("power-dots")) {
+      eatPowerDot;
+    }
+    if (cells[pacmanNewPosition].contains(ghosts)) {
+      eatsGhost;
+      playerScore += blueGhostPoints;
+      removeGhost();
+      addPacman();
+    }
+    // else if (eatsFruit){
+    //   playerScore += fruitPoints;
+    //   removeGhost()
+    //   addPacman()
+    // }
+    // if (lives === )
+    //  Check for lives !!
+    // if (lives === )
+    // livesDisplay.innerHTML = lives ? "❤️".repeat(lives) : "☠️";
+  }
+  // Get pacman to move
+  document.addEventListener("keydown", movePacman);
+  // Start ghosts moving
+  ghosts.forEach((ghost) => moveGhost(ghost));
 }
-
-//Need to create loose lives function
-
-// function startGame() {
-//   if (!isPlaying) {
-//     isPlaying = !isPlaying;
-//     timer = setInterval(() => {
-//       // pacman eats dot
-//       let eatsDots = removeDot();
-//       let eatsPowerDot = removePowerDot();
-//       let eatsGhost = removeEatenGhost()
-//       console.log("the game has started");
-
-//       if (eatsDots) {
-//         // const dotPoints = 10;
-//         // const powerDotPoints = 20;
-//         // const fruitPoints = 20;
-//         // const blueGhostPoints = 200;
-
-//         playerScore += dotPoints;
-//         // removeDot()
-//         // addPacman()
-
-//        Check the lives !!
-//         livesDisplay.innerHTML = lives ? "❤️".repeat(lives) : "☠️";
-//       }
-//       // else if (eatsPowerDot){
-//       //   playerScore += powerDotPoints;
-//       //   removePowerDot()
-//       //   addPacman()
-//       // }
-//       // else if (eatsGhost){
-//       //   playerScore += blueGhostPoints;
-//       //   removeGhost()
-//       //   addPacman()
-//       // }
-//       // else if (eatsFruit){
-//       //   playerScore += fruitPoints;
-//       //   removeGhost()
-//       //   addPacman()
-//       // }
-//     }, 1000);
-//   }
-// }
 // add event listener :
-// button.addEventListener("click", playGame);
+button.addEventListener("click", startGame());
 // resetButton.addEventListener("click", reset);
+
+// END GAME !
+//Need to create loose lives function
+function endGame() {}

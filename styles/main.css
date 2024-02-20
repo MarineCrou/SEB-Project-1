@@ -24,6 +24,7 @@ header {
   text-align: center;
   width: 100%;
 }
+
 #packman-logo {
   display: block;
   margin: 0 auto;
@@ -37,6 +38,7 @@ h2 {
   margin-top: 0;
   margin-bottom: 5px;
 }
+
 button {
   font-family: var(--arcade-font);
   box-shadow: 0 0 40px 0 var(--color-blue);
@@ -47,6 +49,7 @@ button {
   margin: 20px 0px 40px;
   cursor: pointer;
 }
+
 button:hover {
   font-family: var(--arcade-font);
   box-shadow: 0 0 40px 0 var(--color-red);
@@ -90,6 +93,7 @@ button:hover {
   height: 400px;
   width: 800px;
 }
+
 .grid div {
   border: 0.3px solid var(--color-black);
   flex-grow: 1;
@@ -110,6 +114,7 @@ button:hover {
 .grid div.dots {
   background-image: radial-gradient(#febb96 12%, #0000 10%);
 }
+
 .grid div.power-dots {
   background-image: radial-gradient(#f0a57c 24%, #0000 10%);
 }
@@ -134,24 +139,27 @@ button:hover {
 }
 
 /* Add Ghosts * 4 (if can be refactored, do) */
-.grid div.ghost-blinky {
+.grid div.power {
   background-image: url("../img/blinky.png");
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: center;
 }
+
 .grid div.ghost-clyde {
   background-image: url("../img/clyde.png");
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: center;
 }
+
 .grid div.ghost-inky {
   background-image: url("../img/inky.png");
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: center;
 }
+
 .grid div.ghost-pinky {
   background-image: url("../img/pinky.png");
   background-repeat: no-repeat;
@@ -165,6 +173,7 @@ button:hover {
   background-size: 60%;
   background-position: center;
 }
+
 /* Add border Visual */
 
 /* Add fruits + Pallet + dots */
