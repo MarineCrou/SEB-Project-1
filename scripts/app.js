@@ -322,45 +322,35 @@ function resetPositions() {
   pacmanCurrentPosition = 127;
   cells[pacmanCurrentPosition].classList.add("pacman");
   // reset Ghosts
-  let ghostInitialPosition = [
-    { ghostName: blinkyStartPosition, startPosition: 89 },
-    { ghostName: pinkyStartPosition, startPosition: 69 },
-    { ghostName: inkyStartPosition, startPosition: 70 },
-    { ghostName: clydeStartPosition, startPosition: 90 },
-  ];
+
   ghosts.forEach((ghost) => {
     cells[ghost.currentPosition].classList.remove(ghost.className);
-    ghost.currentPosition = ghost.ghostInitialPosition;
+    // Determine and set the ghost's initial position based on its name or className
+    if (ghost.className === "blinky") {
+      ghost.currentPosition = blinkyStartPosition;
+    } else if (ghost.className === "pinky") {
+      ghost.currentPosition = pinkyStartPosition;
+    } else if (ghost.className === "inky") {
+      ghost.currentPosition = inkyStartPosition;
+    } else if (ghost.className === "clyde") {
+      ghost.currentPosition = clydeStartPosition;
+    }
     cells[ghost.currentPosition].classList.add(ghost.className);
-    console.log(ghost.initialPosition);
   });
 }
-
-// Add a delay - for ghosts coming out of their section
-// Add a Start Button / Starts game !!
-// 6. figure out how to delete a pallet/fruit once packman is on the same cell (look at whack a mole)
-// 7. Have lives be discounted when looses
-
-/* to get ghosts to move in random position : control flow of direction - Based on index position of ghost */
-/* trace an array of the cells i would to be a barrier */
 
 // PLAY GAME !!
 
 // Reset Game (when Player Looses)
 function reset() {
   clearInterval(ghostInterval);
-  // display player's score
   playerScore = 0;
   scoreDisplay.textContent = playerScore;
-  // reset lives to max = 3
   lives = 3;
   livesDisplay.innerHTML = "❤️".repeat(lives);
-  // player is not playing
   isPlaying = false;
-  // currentPosition = startPosition
   removePacman();
   removeGhosts();
-  // reset cells to empty array
   cells = [];
   startGame();
 }
@@ -414,3 +404,11 @@ button.addEventListener("click", startGame());
 // END GAME !
 //Need to create loose lives function
 function endGame() {}
+
+// Add a delay - for ghosts coming out of their section
+// Add a Start Button / Starts game !!
+// 6. figure out how to delete a pallet/fruit once packman is on the same cell (look at whack a mole)
+// 7. Have lives be discounted when looses
+
+/* to get ghosts to move in random position : control flow of direction - Based on index position of ghost */
+/* trace an array of the cells i would to be a barrier */
