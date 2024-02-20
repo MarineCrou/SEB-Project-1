@@ -92,10 +92,10 @@ function createGhosts(position, className) {
 }
 
 function addGhosts() {
-  let blinky = createGhosts(blinkyStartPosition, "ghost-blinky");
-  let clyde = createGhosts(clydeStartPosition, "ghost-clyde");
-  let inky = createGhosts(inkyStartPosition, "ghost-inky");
-  let pinky = createGhosts(pinkyStartPosition, "ghost-pinky");
+  createGhosts(blinkyStartPosition, "ghost-blinky");
+  createGhosts(clydeStartPosition, "ghost-clyde");
+  createGhosts(inkyStartPosition, "ghost-inky");
+  createGhosts(pinkyStartPosition, "ghost-pinky");
 }
 addGhosts();
 
@@ -132,6 +132,11 @@ blockCells();
 // need to ensure ghosts leave their "prison" first
 
 //ADD Ghosts * 4
+// // Ghosts
+// let blinkyStartPosition = 89;
+// let pinkyStartPosition = 69;
+// let inkyStartPosition = 70;
+// let clydeStartPosition = 90;
 
 let ghosts = [
   { position: blinkyStartPosition, className: "ghost-blinky" },
@@ -139,6 +144,8 @@ let ghosts = [
   { position: inkyStartPosition, className: "ghost-inky" },
   { position: pinkyStartPosition, className: "ghost-pinky" },
 ];
+
+class ghostfactory {}
 
 function moveGhosts() {
   ghosts.forEach((ghost) => {
@@ -262,17 +269,20 @@ addPowerDots();
 
 //How to disable blocks from being gone through
 
-// 4.4 Add a delay - for ghosts coming out of their section
+// Add a delay - for ghosts coming out of their section
+// Add a Start Button / Starts game !!
 // 6. figure out how to delete a pallet/fruit once packman is on the same cell (look at whack a mole)
 // 7. Have lives be discounted when looses
-// 8. Add a Start Button / Starts game
 
 /* to get ghosts to move in random position : control flow of direction - Based on index position of ghost */
 /* trace an array of the cells i would to be a barrier */
 
 // PLAY GAME !!
 // Reset Game -> Function to reset the game when player Looses
+
+// reset is very similar to startGame => could be the same function
 function reset() {
+  // clear interval
   // display player's score
   playerScore = 0;
   scoreDisplay.textContent = playerScore;
@@ -281,10 +291,12 @@ function reset() {
   livesDisplay.innerHTML = "❤️".repeat(lives);
   // player is not playing
   isPlaying = false;
+  // currentPosition = startPosition
   removePacman();
   removeGhosts();
-  addPacman();
-  addGhosts();
+  // reset cells to empty array
+  cells = [];
+  startGame();
 }
 
 // Pacman Eats (fruit, dots, powerDots, Ghosts)
@@ -297,6 +309,11 @@ function pacmanEats(edibleItem, score) {
 // Start Button
 // when player clicks on start, launch game & free Ghosts
 // create function, which launches the game :
+
+if (cells[newPosition].contains(ghosts)) {
+}
+
+//Need to create loose lives function
 
 // function startGame() {
 //   if (!isPlaying) {
@@ -318,14 +335,7 @@ function pacmanEats(edibleItem, score) {
 //         // removeDot()
 //         // addPacman()
 
-//         if (!lives) {
-//           endGame();
-//         } else if
-//         // if eats all dots (power and dots), game over
-//         // if (eatsALLDots){
-//           // endGame();
-//         // }
-
+//        Check the lives !!
 //         livesDisplay.innerHTML = lives ? "❤️".repeat(lives) : "☠️";
 //       }
 //       // else if (eatsPowerDot){
