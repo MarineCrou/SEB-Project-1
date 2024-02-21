@@ -139,7 +139,7 @@ button:hover {
 }
 
 /* Add Ghosts * 4 (if can be refactored, do) */
-.grid div.power {
+.grid div.ghost-blinky {
   background-image: url("../img/blinky.png");
   background-repeat: no-repeat;
   background-size: 60%;
