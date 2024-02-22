@@ -67,8 +67,8 @@ const walls = [
 const gCells = [43, 44, 45, 46, 63, 83, 85, 86, 103, 106, 123, 124, 125, 126];
 const aCells = [53, 54, 55, 56, 73, 76, 93, 94, 95, 96, 113, 116, 133, 136];
 const aCenterCells = [74, 75];
-const ghostCell = [68, 71, 88, 91, 108, 109, 110, 111];
-const cellCells = [69, 70, 89, 90];
+const ghostCellWalls = [68, 71, 88, 91, 108, 109, 110, 111];
+const ghostsCell = [69, 70, 89, 90];
 const ghostGateCells = [69, 70];
 
 // pacman dies
@@ -102,15 +102,6 @@ function createGrid() {
   totalDotsOnGrid();
 }
 createGrid();
-
-// ........ reset Grid..............
-function clearAndRecreateGrid() {
-  grid.innerHTML = "";
-  cells = [];
-  removeGhosts();
-  removePacman();
-  createGrid();
-}
 
 //.................ADD & DELETE pacman............................
 function addPacman(position) {
@@ -155,7 +146,7 @@ function blockCells() {
   applyBlockStyle(walls, "blocks-blue");
   applyBlockStyle(gCells, "blocks-red");
   applyBlockStyle(aCells, "blocks-red");
-  applyBlockStyle(ghostCell, "blocks-blue");
+  applyBlockStyle(ghostCellWalls, "blocks-blue");
   applyBlockStyle(ghostGateCells, "ghost-gates");
 }
 blockCells();
@@ -184,7 +175,7 @@ function createDottedCells() {
       !walls.includes(index) &&
       !gCells.includes(index) &&
       !aCells.includes(index) &&
-      !ghostCell.includes(index) &&
+      !ghostCellWalls.includes(index) &&
       !aCenterCells.includes(index)
     ) {
       cell.classList.add("dots");
@@ -242,7 +233,7 @@ function pacmanIsValidPosition(pacmanNewPosition) {
     !walls.includes(pacmanNewPosition) &&
     !gCells.includes(pacmanNewPosition) &&
     !aCells.includes(pacmanNewPosition) &&
-    !ghostCell.includes(pacmanNewPosition)
+    !ghostCellWalls.includes(pacmanNewPosition)
   );
 }
 
@@ -297,13 +288,16 @@ function moveGhosts() {
   removeGhosts();
   ghosts.forEach((ghost) => {
     const directions = [-1, +1, -height, +height];
+    // if ghosts leave cell, then
+    // if (ghost)
+
     const direction = directions[Math.floor(Math.random() * directions.length)];
     let nextPosition = ghost.position + direction;
     if (
       !walls.includes(nextPosition) &&
       !gCells.includes(nextPosition) &&
       !aCells.includes(nextPosition) &&
-      !ghostCell.includes(nextPosition) &&
+      !ghostCellWalls.includes(nextPosition) &&
       nextPosition >= 0 &&
       nextPosition < cellCount &&
       !(nextPosition % width === height - 1) &&
@@ -341,6 +335,8 @@ function manageGhostCollision() {
   // Decrease lives, restart level, or end game, etc.
   // If pacman bumps into ghost
   // lives
+  let pacmanDeathAudio = document.getElementById("pacman-death-audio");
+  pacmanDeathAudio.play();
   lives = Math.max(0, lives - 1);
   livesDisplay.innerHTML = lives ? "🌕".repeat(lives) : "Game Over";
   console.log(`Lives left: ${lives}`);
@@ -376,6 +372,8 @@ function setGhostInterval() {
 }
 //
 function startGame() {
+  let pacmanStartAudio = document.getElementById("pacman-starts-audio");
+  pacmanStartAudio.play();
   // logHighScore();
   if (!isPlaying) {
     isPlaying = true;
