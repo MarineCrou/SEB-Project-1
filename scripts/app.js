@@ -83,6 +83,20 @@ livesDisplay = document.querySelector("#live-count");
 livesDisplay.innerText = "🌕🌕🌕";
 let isPlaying = false;
 
+window.addEventListener(
+  "keydown",
+  function (e) {
+    if (
+      ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(
+        e.code
+      ) > -1
+    ) {
+      e.preventDefault();
+    }
+  },
+  false
+);
+
 //.....................PLACING ELEMENTS.......................
 //creating the grid framework : 20w*10h
 function createGrid() {
@@ -124,7 +138,6 @@ function addGhosts() {
   createGhosts(ghosts[2].position, "ghost-inky");
   createGhosts(ghosts[3].position, "ghost-pinky");
 }
-addGhosts();
 
 // delete ghosts
 function deleteGhost(ghostPosition, className) {
@@ -203,6 +216,10 @@ function addFruits() {
     const firstFruitCell = cells[firstFruitPosition];
     firstFruitCell.classList.add("fruits");
     console.log(`the first fruit is at ${firstFruitPosition} `);
+
+    setTimeout(() => {
+      firstFruitCell.classList.remove("fruits");
+    }, 11000);
   }, 6000);
 
   setTimeout(() => {
@@ -210,9 +227,11 @@ function addFruits() {
     const secondFruitCell = cells[secondFruitPosition];
     secondFruitCell.classList.add("fruits");
     console.log(`the second fruit is at ${secondFruitPosition} `);
-  }, 12000);
+    setTimeout(() => {
+      secondFruitPosition.classList.remove("fruits");
+    }, 12000);
+  }, 18000);
 }
-addFruits();
 
 // .....................PACMAN EATS...............................
 function eatDot(position) {
@@ -240,6 +259,7 @@ function eatsFruits(position) {
     playerScore += fruitPoints;
     scoreDisplay.innerHTML = playerScore;
     console.log(scoreDisplay);
+
     //Ghosts becomes blue and vulnerable
     // ghosts.forEach(
     //   (ghost, className) => cells[position].classList.remove(className);
@@ -306,6 +326,7 @@ function movePacman(event) {
   // pacman Eats
   eatDot(pacmanCurrentPosition);
   eatPowerDot(pacmanCurrentPosition);
+  eatsFruits(pacmanCurrentPosition);
 
   if (cellContainsGhost(pacmanCurrentPosition)) {
     manageGhostCollision();
@@ -412,12 +433,13 @@ function setGhostInterval() {
 function startGame() {
   let pacmanStartAudio = document.getElementById("pacman-starts-audio");
   pacmanStartAudio.play();
-  // logHighScore();
   if (!isPlaying) {
     isPlaying = true;
     console.log("Game has started");
     // ghosts start moving
+    addGhosts();
     setGhostInterval();
+    addFruits();
     // pacman moves
     document.addEventListener("keydown", movePacman);
   }
