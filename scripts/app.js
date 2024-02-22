@@ -5,6 +5,7 @@
 // 🐛 ->
 // Need to get rid of 2 pallets in the A
 // Need to fix : pacman doesn't reset everytime meets a ghost // ALWAYS DIES WHEN GHOSTS NOT MOVING
+// Need to Fix the infinate loop when game end (interval issue)
 
 // Need to fix why first row can't be accessed anymore
 // Need to fix pacman Error message : cannot read properties of undefined (reading 'classList')
@@ -13,7 +14,9 @@
 // NEED TO GET GHOST TO NOT GO BACK TO CELL
 
 // Score Board
-const scoreDisplay = document.querySelector(".player-score-number");
+const endGameModal = document.getElementById("end-game-modal");
+const modalScoreDisplay = document.getElementById("modal-player-score-number");
+const scoreDisplay = document.querySelector("#player-score-number");
 const liveCount = document.querySelector("#live-count");
 const highestScore = document.querySelector(".highest-score-number");
 const startGameButton = document.querySelector("#start-button");
@@ -353,27 +356,26 @@ function resetPacmanPosition() {
 // ..................RESET GAME............................
 
 // Reset Game (when Player Looses 1 Life)
-// function resetGame() {
-//   clearInterval(setGhostInterval);
-//   playerScore = 0;
-//   scoreDisplay.textContent = playerScore;
-//   lives = 3;
-//   livesDisplay.innerHTML = "🌕".repeat(lives);
-//   isPlaying = false;
-//   removePacman();
-//   cells = [];
-//   startGame();
-// }
-// resetButton.addEventListener("click", resetGame);
+function resetGame() {
+  clearInterval(setGhostInterval);
+  playerScore = 0;
+  scoreDisplay.textContent = playerScore;
+  lives = 3;
+  livesDisplay.innerHTML = "🌕".repeat(lives);
+  isPlaying = false;
+  removePacman();
+  cells = [];
+  startGame();
+}
 
-// .....................Start Game........................
+// .....................START GAME........................
 // when player clicks on start, launch game & free Ghosts
-
 function setGhostInterval() {
   ghostInterval = setInterval(() => {
     moveGhosts();
   }, 400);
 }
+//
 function startGame() {
   // logHighScore();
   if (!isPlaying) {
@@ -390,12 +392,21 @@ startGameButton.addEventListener("click", startGame);
 // ..................END GAME ..........................
 //Need to create loose lives function
 function endGame() {
+  endGameModalPopUp();
   isPlaying = false;
   clearInterval(ghostInterval);
   scoreDisplay.textContent = playerScore;
-  alert("Game Over! Your score: " + playerScore);
-  startGame();
 }
+// .................END GAME MODAL......................
+function endGameModalPopUp() {
+  endGameModal.style.display = "block";
+  modalScoreDisplay.innerHTML = playerScore;
+}
+function closeendGameModalPopUp() {
+  endGameModal.style.display = "none";
+  resetGame();
+}
+resetButton.addEventListener("click", closeendGameModalPopUp);
 
 // ............WIN GAME .......................
 function totalDotsOnGrid() {
@@ -421,9 +432,4 @@ function winGame() {
 }
 
 // Add a delay - for ghosts coming out of their section
-// Add a Start Button / Starts game !!
 // 6. figure out how to delete a pallet/fruit once packman is on the same cell (look at whack a mole)
-// 7. Have lives be discounted when looses
-
-/* to get ghosts to move in random position : control flow of direction - Based on index position of ghost */
-/* trace an array of the cells i would to be a barrier */
