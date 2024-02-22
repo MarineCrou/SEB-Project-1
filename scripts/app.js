@@ -4,16 +4,16 @@
 
 // 🐛 ->
 // Need to get rid of 2 pallets in the A
+// Need to fix : pacman doesn't reset everytime meets a ghost // ALWAYS DIES WHEN GHOSTS NOT MOVING
 
 // Need to fix why first row can't be accessed anymore
-// Need to fix pacman Error message : annot read properties of undefined (reading 'classList')
-// Need to fix : pacman doesn't reset everytime meets a ghost // ALWAYS DIES WHEN GHOSTS NOT MOVING
+// Need to fix pacman Error message : cannot read properties of undefined (reading 'classList')
 // Need to fix the HighScore
 // Need to add Fruits and Eadible Ghosts
 // NEED TO GET GHOST TO NOT GO BACK TO CELL
 
 // Score Board
-const scoreDisplay = document.querySelector("#player-score-number");
+const scoreDisplay = document.querySelector(".player-score-number");
 const liveCount = document.querySelector("#live-count");
 const highestScore = document.querySelector(".highest-score-number");
 const startGameButton = document.querySelector("#start-button");
@@ -44,10 +44,10 @@ let ghosts = [
   { position: inkyStartPosition, className: "ghost-inky" },
   { position: pinkyStartPosition, className: "ghost-pinky" },
 ];
+let ghostInterval = null;
 
 // ghosts are eadible
 const blueGhost = false;
-
 // Dot variables
 let numberOfDots = 0;
 let powerDotCells = [140, 19, 40, 197];
@@ -58,9 +58,9 @@ let blueGhostPoints = 200;
 
 // Wall variables:
 const walls = [
-  3, 4, 7, 8, 9, 10, 11, 12, 14, 15, 16, 21, 28, 29, 30, 31, 38, 60, 61, 79, 78,
-  120, 121, 139, 138, 148, 149, 150, 151, 161, 162, 165, 168, 169, 170, 171,
-  173, 174, 175, 177, 178, 184, 185, 186, 195,
+  3, 4, 7, 8, 9, 10, 11, 12, 14, 15, 16, 21, 38, 60, 61, 79, 78, 120, 121, 139,
+  138, 148, 149, 150, 151, 161, 162, 165, 168, 169, 170, 171, 173, 174, 175,
+  177, 178, 184, 185, 186, 195,
 ];
 const gCells = [43, 44, 45, 46, 63, 83, 85, 86, 103, 106, 123, 124, 125, 126];
 const aCells = [53, 54, 55, 56, 73, 76, 93, 94, 95, 96, 113, 116, 133, 136];
@@ -302,6 +302,9 @@ function moveGhosts() {
       ghost.position = nextPosition;
       // console.log(`Ghost position ${ghost.className} is in${ghost.position}`);
     }
+    if (pacmanColidedGhost()) {
+      manageGhostCollision();
+    }
   });
   addGhosts();
 }
@@ -320,16 +323,21 @@ function pacmanColidedGhost() {
   return collisionDetected;
 }
 
+let collisionDelay = false;
 function manageGhostCollision() {
+  if (collisionDelay) return;
+  collisionDelay = true;
+  setTimeout(() => (collisionDelay = false), 1000);
   // Decrease lives, restart level, or end game, etc.
   // If pacman bumps into ghost
   // lives
-  lives--;
+  lives = Math.max(0, lives - 1);
   livesDisplay.innerHTML = lives ? "🌕".repeat(lives) : "Game Over";
   console.log(`Lives left: ${lives}`);
   if (lives <= 0) {
     console.log("Game Over");
     endGame();
+    startGame();
   } else {
     resetPacmanPosition();
   }
@@ -345,24 +353,24 @@ function resetPacmanPosition() {
 // ..................RESET GAME............................
 
 // Reset Game (when Player Looses 1 Life)
-function resetGame() {
-  clearInterval(ghostInterval);
-  playerScore = 0;
-  scoreDisplay.textContent = playerScore;
-  lives = 3;
-  livesDisplay.innerHTML = "🌕".repeat(lives);
-  isPlaying = false;
-  removePacman();
-  cells = [];
-  startGame();
-}
-resetButton.addEventListener("click", resetGame);
+// function resetGame() {
+//   clearInterval(setGhostInterval);
+//   playerScore = 0;
+//   scoreDisplay.textContent = playerScore;
+//   lives = 3;
+//   livesDisplay.innerHTML = "🌕".repeat(lives);
+//   isPlaying = false;
+//   removePacman();
+//   cells = [];
+//   startGame();
+// }
+// resetButton.addEventListener("click", resetGame);
 
 // .....................Start Game........................
 // when player clicks on start, launch game & free Ghosts
 
 function setGhostInterval() {
-  setInterval(() => {
+  ghostInterval = setInterval(() => {
     moveGhosts();
   }, 400);
 }
@@ -383,10 +391,10 @@ startGameButton.addEventListener("click", startGame);
 //Need to create loose lives function
 function endGame() {
   isPlaying = false;
-  clearInterval(setGhostInterval());
+  clearInterval(ghostInterval);
   scoreDisplay.textContent = playerScore;
   alert("Game Over! Your score: " + playerScore);
-  resetGame();
+  startGame();
 }
 
 // ............WIN GAME .......................
