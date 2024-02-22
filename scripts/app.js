@@ -28,7 +28,7 @@ const grid = document.querySelector(".grid");
 const width = 10;
 const height = 20;
 const cellCount = height * width;
-const cells = [];
+let cells = [];
 
 // character positions
 //pacman poistion
@@ -97,10 +97,20 @@ function createGrid() {
   addGhosts(pinkyStartPosition);
   addGhosts(clydeStartPosition);
   addGhosts(inkyStartPosition);
+  createDottedCells();
   addPowerDots(powerDotCells);
   totalDotsOnGrid();
 }
 createGrid();
+
+// ........ reset Grid..............
+function clearAndRecreateGrid() {
+  grid.innerHTML = "";
+  cells = [];
+  removeGhosts();
+  removePacman();
+  createGrid();
+}
 
 //.................ADD & DELETE pacman............................
 function addPacman(position) {
@@ -354,15 +364,7 @@ function resetPacmanPosition() {
 
 // Reset Game (when Player Looses 1 Life)
 function resetGame() {
-  clearInterval(setGhostInterval);
-  playerScore = 0;
-  scoreDisplay.textContent = playerScore;
-  lives = 3;
-  livesDisplay.innerHTML = "🌕".repeat(lives);
-  isPlaying = false;
-  addPacman();
-  cells = [];
-  startGame();
+  location.reload();
 }
 
 // .....................START GAME........................
