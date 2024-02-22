@@ -54,10 +54,10 @@ const blueGhost = false;
 // Dot variables
 let numberOfDots = 0;
 let powerDotCells = [140, 19, 40, 197];
-let dotPoints = 10;
-let powerDotPoints = 20;
-let fruitPoints = 20;
-let blueGhostPoints = 200;
+let dotPoints = 50;
+let powerDotPoints = 100;
+let fruitPoints = 250;
+let blueGhostPoints = 500;
 
 // Wall variables:
 const walls = [
@@ -201,7 +201,6 @@ function eatDot(position) {
     playerScore += dotPoints;
     scoreDisplay.innerHTML = playerScore;
     totalDotsOnGrid();
-    addPacman();
   }
 }
 
@@ -212,7 +211,6 @@ function eatPowerDot(position) {
     scoreDisplay.innerHTML = playerScore;
     console.log(scoreDisplay);
     totalDotsOnGrid();
-    addPacman();
   }
 }
 
@@ -235,34 +233,34 @@ function pacmanIsValidPosition(pacmanNewPosition) {
     !walls.includes(pacmanNewPosition) &&
     !gCells.includes(pacmanNewPosition) &&
     !aCells.includes(pacmanNewPosition) &&
-    !ghostCell.includes(pacmanNewPosition) &&
-    // check for border :
-    // Top border
-    pacmanNewPosition >= 0 &&
-    // bottom border
-    pacmanNewPosition < cellCount &&
-    // right border
-    !(pacmanNewPosition % width === height - 1) &&
-    // left border
-    !(pacmanNewPosition % height === 0)
+    !ghostCell.includes(pacmanNewPosition)
   );
 }
 
 function movePacman(event) {
+  // create a Local variable
   // left is 37 //
-  if (event.keyCode === 37) {
+  if (event.keyCode === 37 && !(pacmanCurrentPosition % height === 0)) {
     pacmanNewPosition = pacmanCurrentPosition - 1;
     // up is 38
-  } else if (event.keyCode === 38) {
+  } else if (event.keyCode === 38 && pacmanCurrentPosition >= height) {
     pacmanNewPosition = pacmanCurrentPosition - height;
     // right is 39
-  } else if (event.keyCode === 39) {
+  } else if (
+    event.keyCode === 39 &&
+    !(pacmanCurrentPosition % height === height - 1)
+  ) {
     pacmanNewPosition = pacmanCurrentPosition + 1;
     // down is 40
-  } else if (event.keyCode === 40) {
+  } else if (
+    event.keyCode === 40 &&
+    pacmanCurrentPosition < cellCount - height
+  ) {
     pacmanNewPosition = pacmanCurrentPosition + height;
   }
   console.log(pacmanNewPosition);
+  console.log(!(pacmanNewPosition % height === 0));
+  console.log(pacmanCurrentPosition);
 
   removePacman(pacmanCurrentPosition);
   // Move Pacman + eats
