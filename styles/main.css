@@ -32,19 +32,28 @@ header {
   /* Stay in place front is invalid - may break your css so removed */
   padding-top: 100px;
   /* Location of the box - don't know what this does?  If it is to move your modal down by 100px, then just change top below to 100px and remove this*/
-  left: 40px;
-  right: 40px;
+  left: 100px;
+  right: 100px;
   /* Full width (left and right 0) */
-  top: 40px;
-  bottom: 40px;
+  top: 100px;
+  bottom: 100px;
   /* Full height top and bottom 0 */
   overflow: auto;
   /* Enable scroll if needed */
   /* background-color: rgb(0, 0, 0); */
   /* Fallback color */
-  background-color: var(--color-black);
-  /* Black w/ opacity */
-  z-index: 9999;
+  background-color: rgba(34, 34, 34, 1);
+  text-align: center;
+  border: 12px solid var(--color-red);
+  box-shadow: 0 0 40px 0 var(--color-red);
+  border-style: double;
+  padding-top: 0;
+}
+
+#game-over {
+  display: block;
+  margin: 0 auto;
+  max-width: 300px;
 }
 
 #packman-logo {

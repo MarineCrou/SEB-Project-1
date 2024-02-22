@@ -36,7 +36,6 @@ let pacmanCurrentPosition = 127;
 // let pacmanNewPosition = pacmanCurrentPosition;
 
 // Ghosts
-
 let blinkyStartPosition = 89;
 let pinkyStartPosition = 69;
 let inkyStartPosition = 70;
@@ -361,7 +360,7 @@ function resetGame() {
   lives = 3;
   livesDisplay.innerHTML = "🌕".repeat(lives);
   isPlaying = false;
-  removePacman();
+  addPacman();
   cells = [];
   startGame();
 }
@@ -398,7 +397,7 @@ function endGame() {
 // .................END GAME MODAL......................
 function endGameModalPopUp() {
   endGameModal.style.display = "block";
-  modalScoreDisplay.innerHTML = playerScore;
+  modalScoreDisplay.innerHTML = `Your Score : ${playerScore}`;
 }
 function closeendGameModalPopUp() {
   endGameModal.style.display = "none";
@@ -410,7 +409,7 @@ resetButton.addEventListener("click", closeendGameModalPopUp);
 function totalDotsOnGrid() {
   numberOfDots =
     document.querySelectorAll(".dots").length +
-    document.querySelectorAll(".power");
+    document.querySelectorAll(".power-dots").length;
   if (numberOfDots === 0) {
     winGame();
   }
@@ -418,16 +417,24 @@ function totalDotsOnGrid() {
 
 function winGame() {
   isPlaying = false;
-  clearInterval(setGhostInterval);
+  clearInterval(ghostInterval);
+  winGameModalPopUp();
+}
+// ............Win Game Modal .....................
+function winGameModalPopUp() {
+  endGameModal.style.display = "block";
+  modalScoreDisplay.innerHTML = playerScore;
   setTimeout(() => {
     if (highScore >= playerScore) {
-      alert(`Your score was ${playerScore}`);
+      modalScoreDisplay.innerHTML = `Your Score : ${playerScore}`;
       logHighScore();
     } else {
-      alert(`New high score! ${playerScore}`);
+      modalScoreDisplay.innerHTML = `New high score! ${playerScore}`;
     }
   }, 50);
 }
-
-// Add a delay - for ghosts coming out of their section
-// 6. figure out how to delete a pallet/fruit once packman is on the same cell (look at whack a mole)
+function closeWinGameModalPopUp() {
+  endGameModal.style.display = "none";
+  resetGame();
+}
+resetButton.addEventListener("click", closeWinGameModalPopUp);
