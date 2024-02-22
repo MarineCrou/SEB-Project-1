@@ -2,11 +2,22 @@
 // - The player should be able to clear at least one board
 // - The player's score should be displayed at the end of the game
 
+// 🐛 ->
+// Need to get rid of 2 pallets in the A
+
+// Need to fix why first row can't be accessed anymore
+// Need to fix pacman Error message : annot read properties of undefined (reading 'classList')
+// Need to fix : pacman doesn't reset everytime meets a ghost // ALWAYS DIES WHEN GHOSTS NOT MOVING
+// Need to fix the HighScore
+// Need to add Fruits and Eadible Ghosts
+// NEED TO GET GHOST TO NOT GO BACK TO CELL
+
 // Score Board
 const scoreDisplay = document.querySelector("#player-score-number");
 const liveCount = document.querySelector("#live-count");
 const highestScore = document.querySelector(".highest-score-number");
-const startGameButton = document.querySelector("button");
+const startGameButton = document.querySelector("#start-button");
+const resetButton = document.querySelector("#reset-button");
 
 // VARIABLES :
 // Grid Variables
@@ -19,7 +30,7 @@ const cells = [];
 // character positions
 //pacman poistion
 let pacmanCurrentPosition = 127;
-let pacmanNewPosition = pacmanCurrentPosition;
+// let pacmanNewPosition = pacmanCurrentPosition;
 
 // Ghosts
 
@@ -47,9 +58,9 @@ let blueGhostPoints = 200;
 
 // Wall variables:
 const walls = [
-  3, 4, 7, 8, 11, 12, 14, 15, 16, 21, 28, 29, 31, 38, 60, 61, 79, 78, 120, 121,
-  139, 138, 148, 149, 150, 151, 161, 162, 165, 168, 169, 170, 171, 173, 174,
-  175, 177, 178, 184, 185, 186, 195,
+  3, 4, 7, 8, 9, 10, 11, 12, 14, 15, 16, 21, 28, 29, 30, 31, 38, 60, 61, 79, 78,
+  120, 121, 139, 138, 148, 149, 150, 151, 161, 162, 165, 168, 169, 170, 171,
+  173, 174, 175, 177, 178, 184, 185, 186, 195,
 ];
 const gCells = [43, 44, 45, 46, 63, 83, 85, 86, 103, 106, 123, 124, 125, 126];
 const aCells = [53, 54, 55, 56, 73, 76, 93, 94, 95, 96, 113, 116, 133, 136];
@@ -69,7 +80,7 @@ livesDisplay = document.querySelector("#live-count");
 livesDisplay.innerText = "🌕🌕🌕";
 let isPlaying = false;
 
-// PLACING ELEMENTS
+//.....................PLACING ELEMENTS.......................
 //creating the grid framework : 20w*10h
 function createGrid() {
   Array.from(Array(cellCount).keys()).forEach((i) => {
@@ -85,10 +96,11 @@ function createGrid() {
   addGhosts(clydeStartPosition);
   addGhosts(inkyStartPosition);
   addPowerDots(powerDotCells);
+  totalDotsOnGrid();
 }
 createGrid();
 
-// ADD pacman to the board
+//.................ADD & DELETE pacman............................
 function addPacman(position) {
   cells[position].classList.add("pacman");
 }
@@ -97,7 +109,7 @@ function removePacman(position) {
   cells[position].classList.remove("pacman");
 }
 
-//ADD Ghosts * 4
+//.................ADD & DELETE Ghosts * 4.........................
 function createGhosts(position, className) {
   cells[position].classList.add(className);
 }
@@ -110,6 +122,7 @@ function addGhosts() {
 }
 addGhosts();
 
+// delete ghosts
 function deleteGhost(ghostPosition, className) {
   cells[ghostPosition].classList.remove(className);
 }
@@ -120,7 +133,7 @@ function removeGhosts() {
   deleteGhost(ghosts[3].position, "ghost-pinky");
 }
 
-// ADD BLOCKS/WALLS
+//...............ADD BLOCKS/WALLS.............................
 function applyBlockStyle(cellIndices, className) {
   cellIndices.forEach((index) => {
     cells[index].classList.add(className);
@@ -135,7 +148,17 @@ function blockCells() {
 }
 blockCells();
 
-// ................ADD DOTS.............................
+//..................high-Score...........................
+function logHighScore() {
+  highScore = localStorage.getItem("highest-score-number");
+  if (!highScore || playerScore > parseInt(highScore)) {
+    localStorage.setItem("high-score", playerScore);
+    highScore = playerScore;
+    highestScore.innerHTML = highScore;
+  }
+}
+
+// ................ADD DOTS & POWERDOTS.............................
 // Dots (Except For cells that have blocks & Pacman & Ghosts)
 function createDottedCells() {
   cells.forEach((cell, index) => {
@@ -150,7 +173,7 @@ function createDottedCells() {
       !gCells.includes(index) &&
       !aCells.includes(index) &&
       !ghostCell.includes(index) &&
-      index !== pacmanCurrentPosition
+      !aCenterCells.includes(index)
     ) {
       cell.classList.add("dots");
     }
@@ -163,19 +186,18 @@ function addPowerDots() {
   powerDotCells.forEach((position) => {
     if (cells[position]) {
       cells[position].classList.add("power-dots");
-      console.log(`Class list after adding: ${cells[position].classList}`);
     }
   });
 }
 addPowerDots();
 
-// .................PACMAN EATS....................
+// .....................PACMAN EATS...............................
 function eatDot(position) {
   if (cells[position].classList.contains("dots")) {
     cells[position].classList.remove("dots");
     playerScore += dotPoints;
-    numberOfDots++;
     scoreDisplay.innerHTML = playerScore;
+    totalDotsOnGrid();
     addPacman();
   }
 }
@@ -186,10 +208,12 @@ function eatPowerDot(position) {
     playerScore += powerDotPoints;
     scoreDisplay.innerHTML = playerScore;
     console.log(scoreDisplay);
+    totalDotsOnGrid();
     addPacman();
   }
 }
 
+//..............Cell Contains Ghosts...........................
 function cellContainsGhost(position) {
   return ghosts.some((ghost) => ghost.position === position);
 }
@@ -242,8 +266,8 @@ function movePacman(event) {
   if (pacmanIsValidPosition(pacmanNewPosition)) {
     pacmanCurrentPosition = pacmanNewPosition;
   }
-  //  add pacman newPosition
   addPacman(pacmanCurrentPosition);
+
   // pacman Eats
   eatDot(pacmanCurrentPosition);
   eatPowerDot(pacmanCurrentPosition);
@@ -260,13 +284,7 @@ document.addEventListener("keydown", movePacman);
 // need to ensure ghosts leave their "prison" first
 
 function moveGhosts() {
-  // NEED TO GET THE GHOST TO NOT GO BACK TO PREVIOUS POSITION
-  // NEED TO GET GHOST TO NOT GO BACK TO CELL
-  // If ghost in gateghostcell => need to go direction -width
-  // If ghosts in 89 || 90 =>> needs to move up 2 cells (-width*2) before getting out
-
   removeGhosts();
-
   ghosts.forEach((ghost) => {
     const directions = [-1, +1, -height, +height];
     const direction = directions[Math.floor(Math.random() * directions.length)];
@@ -294,7 +312,7 @@ function pacmanColidedGhost() {
   // Check if Pac-Man's position = any of the ghosts' positions
   ghosts.forEach((ghost) => {
     if (pacmanCurrentPosition === ghost.position) {
-      console.log(`bumped into a ${ghost.className}`);
+      console.log(`pacmanbumped into a ${ghost.className}`);
       collisionDetected = true;
       manageGhostCollision();
     }
@@ -304,104 +322,94 @@ function pacmanColidedGhost() {
 
 function manageGhostCollision() {
   // Decrease lives, restart level, or end game, etc.
+  // If pacman bumps into ghost
+  // lives
   lives--;
-  livesDisplay.innerHTML = lives ? "🌕".repeat(lives) : "☠️";
+  livesDisplay.innerHTML = lives ? "🌕".repeat(lives) : "Game Over";
   console.log(`Lives left: ${lives}`);
   if (lives <= 0) {
     console.log("Game Over");
     endGame();
   } else {
-    resetPositions();
+    resetPacmanPosition();
   }
 }
 
-function resetPositions() {
-  // reset pacman position
+function resetPacmanPosition() {
+  // reset pacman to initial position
   cells[pacmanCurrentPosition].classList.remove("pacman");
-  // add pacman to original position :
   pacmanCurrentPosition = 127;
   cells[pacmanCurrentPosition].classList.add("pacman");
-  // reset Ghosts
-
-  ghosts.forEach((ghost) => {
-    cells[ghost.currentPosition].classList.remove(ghost.className);
-    // Determine and set the ghost's initial position based on its name or className
-    if (ghost.className === "blinky") {
-      ghost.currentPosition = blinkyStartPosition;
-    } else if (ghost.className === "pinky") {
-      ghost.currentPosition = pinkyStartPosition;
-    } else if (ghost.className === "inky") {
-      ghost.currentPosition = inkyStartPosition;
-    } else if (ghost.className === "clyde") {
-      ghost.currentPosition = clydeStartPosition;
-    }
-    cells[ghost.currentPosition].classList.add(ghost.className);
-  });
 }
 
-// ..................PLAY GAME............................
+// ..................RESET GAME............................
 
-// Reset Game (when Player Looses)
-function reset() {
+// Reset Game (when Player Looses 1 Life)
+function resetGame() {
   clearInterval(ghostInterval);
   playerScore = 0;
   scoreDisplay.textContent = playerScore;
   lives = 3;
-  livesDisplay.innerHTML = "❤️".repeat(lives);
+  livesDisplay.innerHTML = "🌕".repeat(lives);
   isPlaying = false;
   removePacman();
-  removeGhosts();
   cells = [];
   startGame();
 }
+resetButton.addEventListener("click", resetGame);
 
-// Start Game !!
+// .....................Start Game........................
 // when player clicks on start, launch game & free Ghosts
-// If player is playing (clicked the start button):
-// Ghosts should start moving
-// function should check for lives
-// pacman should start moving and eat dots, powerdots + fruits(if i get to that one)
-// scoreboard should update according to what is eaten (eats dots, powerdots + fruits + ghosts)
 
-// high-Score
-function logHighScore() {
-  if (!highScore || playerScore > highScore) {
-    localStorage.setItem("high-score", playerScore);
-    highestScore.innerHTML = highScore;
-  }
+function setGhostInterval() {
+  setInterval(() => {
+    moveGhosts();
+  }, 400);
 }
-
 function startGame() {
-  logHighScore();
+  // logHighScore();
   if (!isPlaying) {
     isPlaying = true;
     console.log("Game has started");
     // ghosts start moving
-    setInterval(() => {
-      moveGhosts();
-    }, 400);
+    setGhostInterval();
     // pacman moves
     document.addEventListener("keydown", movePacman);
   }
 }
 startGameButton.addEventListener("click", startGame);
 
-// END GAME ..........................
+// ..................END GAME ..........................
 //Need to create loose lives function
 function endGame() {
   isPlaying = false;
-  clearInterval(ghostInterval);
-  document.removeEventListener("keydown", movePacman);
+  clearInterval(setGhostInterval());
   scoreDisplay.textContent = playerScore;
   alert("Game Over! Your score: " + playerScore);
+  resetGame();
 }
 
-// winGame .......................
+// ............WIN GAME .......................
+function totalDotsOnGrid() {
+  numberOfDots =
+    document.querySelectorAll(".dots").length +
+    document.querySelectorAll(".power");
+  if (numberOfDots === 0) {
+    winGame();
+  }
+}
+
 function winGame() {
-  // if pacman eats all of the dots (power + normal) - end game
-  removeGhosts();
-  scoreDisplay.textContent = playerScore;
-  logHighScore();
+  isPlaying = false;
+  clearInterval(setGhostInterval);
+  setTimeout(() => {
+    if (highScore >= playerScore) {
+      alert(`Your score was ${playerScore}`);
+      logHighScore();
+    } else {
+      alert(`New high score! ${playerScore}`);
+    }
+  }, 50);
 }
 
 // Add a delay - for ghosts coming out of their section
