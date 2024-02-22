@@ -96,9 +96,11 @@ button:hover {
   color: var(--color-red);
   font-size: 12px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 }
+
+.diplay-board {}
 
 .board-score {
   padding: 20px 30px;
