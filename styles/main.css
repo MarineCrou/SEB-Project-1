@@ -150,6 +150,14 @@ button:hover {
   background-image: radial-gradient(#f0a57c 24%, #0000 10%);
 }
 
+.grid div.fruits {
+  background-image: url("../img/strawberry.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 90%;
+}
+
+
 /* Add blocks to grid */
 .grid div.blocks-blue {
   background-color: var(--color-blue);

@@ -56,6 +56,7 @@ let powerDotCells = [140, 19, 40, 197];
 let dotPoints = 50;
 let powerDotPoints = 100;
 let fruitPoints = 250;
+let fruitsPosition = [144, 13];
 let blueGhostPoints = 500;
 
 // Wall variables:
@@ -194,6 +195,25 @@ function addPowerDots() {
 }
 addPowerDots();
 
+function addFruits() {
+  const firstFruit = document.querySelector("fruit");
+  const secondFruit = document.querySelector("fruit");
+  setTimeout(() => {
+    const firstFruitPosition = fruitsPosition[0];
+    const firstFruitCell = cells[firstFruitPosition];
+    firstFruitCell.classList.add("fruits");
+    console.log(`the first fruit is at ${firstFruitPosition} `);
+  }, 6000);
+
+  setTimeout(() => {
+    const secondFruitPosition = fruitsPosition[1];
+    const secondFruitCell = cells[secondFruitPosition];
+    secondFruitCell.classList.add("fruits");
+    console.log(`the second fruit is at ${secondFruitPosition} `);
+  }, 12000);
+}
+addFruits();
+
 // .....................PACMAN EATS...............................
 function eatDot(position) {
   if (cells[position].classList.contains("dots")) {
@@ -211,6 +231,20 @@ function eatPowerDot(position) {
     scoreDisplay.innerHTML = playerScore;
     console.log(scoreDisplay);
     totalDotsOnGrid();
+  }
+}
+
+function eatsFruits(position) {
+  if (cells[position].classList.contains("fruits")) {
+    cells[position].classList.remove("fruits");
+    playerScore += fruitPoints;
+    scoreDisplay.innerHTML = playerScore;
+    console.log(scoreDisplay);
+    //Ghosts becomes blue and vulnerable
+    // ghosts.forEach(
+    //   (ghost, className) => cells[position].classList.remove(className);
+    //   cells[position].classList.add(className);
+    // );
   }
 }
 
@@ -322,6 +356,10 @@ function pacmanColidedGhost() {
       console.log(`pacmanbumped into a ${ghost.className}`);
       collisionDetected = true;
       manageGhostCollision();
+    } else if (pacmanCurrentPosition === ghost.position && ghostBlue) {
+      cells[position].classList.remove("className");
+      playerScore += fruitPoints;
+      scoreDisplay.innerHTML = playerScore;
     }
   });
   return collisionDetected;
