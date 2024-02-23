@@ -92,6 +92,13 @@ button:hover {
   cursor: pointer;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
 #lives-score {
   color: var(--color-red);
   font-size: 12px;
@@ -100,9 +107,13 @@ button:hover {
   align-items: center;
 }
 
-.board-score {
+
+.board-score,
+#player-score {
   padding: 20px 30px;
+  margin: 10px;
 }
+
 
 /* GRID SECTION */
 .grid-wrapper {
@@ -147,7 +158,7 @@ button:hover {
 }
 
 .grid div.power-dots {
-  background-image: radial-gradient(#f0a57c 24%, #0000 10%);
+  background-image: radial-gradient(#efbd5a 24%, #0000 10%);
 }
 
 .grid div.fruits {

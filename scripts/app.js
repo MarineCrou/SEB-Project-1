@@ -77,6 +77,7 @@ let loseLife = true;
 
 // Score - Dots - Lives
 let playerScore = 0;
+scoreDisplay.innerHTML = `00`;
 let highScore = localStorage.getItem("highest-score-number");
 let lives = 3;
 livesDisplay = document.querySelector("#live-count");
@@ -106,7 +107,11 @@ function createGrid() {
     grid.appendChild(cell);
     cells.push(cell);
   });
-
+  addPacman(pacmanCurrentPosition);
+  addGhosts(blinkyStartPosition);
+  addGhosts(pinkyStartPosition);
+  addGhosts(clydeStartPosition);
+  addGhosts(inkyStartPosition);
   createDottedCells();
   addPowerDots(powerDotCells);
   totalDotsOnGrid();
@@ -282,7 +287,8 @@ function pacmanIsValidPosition(pacmanNewPosition) {
     !walls.includes(pacmanNewPosition) &&
     !gCells.includes(pacmanNewPosition) &&
     !aCells.includes(pacmanNewPosition) &&
-    !ghostCellWalls.includes(pacmanNewPosition)
+    !ghostCellWalls.includes(pacmanNewPosition) &&
+    !ghostGateCells.includes(pacmanNewPosition)
   );
 }
 
@@ -329,7 +335,6 @@ function movePacman(event) {
 
   console.log(`pacman current position ${pacmanCurrentPosition}`);
 }
-document.addEventListener("keydown", movePacman);
 
 // ........................GHOSTS.................................
 // need to ensure ghosts leave their "prison" first
@@ -431,16 +436,11 @@ function startGame() {
   if (!isPlaying) {
     isPlaying = true;
     console.log("Game has started");
-    // ghosts start moving
-    addPacman(pacmanCurrentPosition);
-    addGhosts(blinkyStartPosition);
-    addGhosts(pinkyStartPosition);
-    addGhosts(clydeStartPosition);
-    addGhosts(inkyStartPosition);
+    // ghosts + pacman start moving
+    document.addEventListener("keydown", movePacman);
     setGhostInterval();
     addFruits();
     // pacman moves
-    document.addEventListener("keydown", movePacman);
   }
 }
 startGameButton.addEventListener("click", startGame);
