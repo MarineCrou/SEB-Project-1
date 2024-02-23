@@ -102,7 +102,7 @@ window.addEventListener(
 function createGrid() {
   Array.from(Array(cellCount).keys()).forEach((i) => {
     const cell = document.createElement("div");
-    cell.innerHTML = i;
+    // cell.innerHTML = i;
     grid.appendChild(cell);
     cells.push(cell);
   });
