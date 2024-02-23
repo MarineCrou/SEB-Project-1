@@ -2,15 +2,20 @@
 // - The player should be able to clear at least one board
 // - The player's score should be displayed at the end of the game
 
-// 🐛 ->
+// 🐛 fixed ->
 // Need to get rid of 2 pallets in the A
 // Need to fix : pacman doesn't reset everytime meets a ghost // ALWAYS DIES WHEN GHOSTS NOT MOVING
 // Need to Fix the infinate loop when game end (interval issue)
-
+// Need to fix reset button issue
+// Need to fix window issue with arrow keys, to prevent window from going uop and down
+// Need to fix : pacman can be played ONLY when start button is pressed (event listener DOM)
 // Need to fix why first row can't be accessed anymore
+// Need to add Fruits with setTimeout
+
+// 🐛 to fix ->
 // Need to fix pacman Error message : cannot read properties of undefined (reading 'classList')
-// Need to fix the HighScore
-// Need to add Fruits and Eadible Ghosts
+// Need to fix the HighScore (highscore does display on Modal)
+// Need to add Eadible Ghosts
 // NEED TO GET GHOST TO NOT GO BACK TO CELL
 
 // Score Board
@@ -84,6 +89,7 @@ livesDisplay = document.querySelector("#live-count");
 livesDisplay.innerText = "🌕🌕🌕";
 let isPlaying = false;
 
+//.......... Prevent window from going up or down, when keyDowns are pressed...............
 window.addEventListener(
   "keydown",
   function (e) {
@@ -175,7 +181,7 @@ function logHighScore() {
   }
 }
 
-// ................ADD DOTS & POWERDOTS.............................
+// ................ADD DOTS & POWERDOTS & Fruits.............................
 // Dots (Except For cells that have blocks & Pacman & Ghosts)
 function createDottedCells() {
   cells.forEach((cell, index) => {
@@ -198,7 +204,7 @@ function createDottedCells() {
 }
 createDottedCells();
 
-// POWER dots
+// POWER dots.......
 function addPowerDots() {
   powerDotCells.forEach((position) => {
     if (cells[position]) {
@@ -208,6 +214,7 @@ function addPowerDots() {
 }
 addPowerDots();
 
+// add Fruits.......
 function addFruits() {
   const firstFruit = document.querySelector("fruit");
   const secondFruit = document.querySelector("fruit");
@@ -316,28 +323,48 @@ function movePacman(event) {
   console.log(pacmanNewPosition);
   console.log(!(pacmanNewPosition % height === 0));
   console.log(pacmanCurrentPosition);
-
+  // remove pacman
   removePacman(pacmanCurrentPosition);
-  // Move Pacman + eats
+  // Move Pacman new position
   if (pacmanIsValidPosition(pacmanNewPosition)) {
     pacmanCurrentPosition = pacmanNewPosition;
   }
   addPacman(pacmanCurrentPosition);
-
   // pacman Eats
   eatDot(pacmanCurrentPosition);
   eatPowerDot(pacmanCurrentPosition);
   eatsFruits(pacmanCurrentPosition);
-
+  //detect ghosts && collision
   if (cellContainsGhost(pacmanCurrentPosition)) {
     manageGhostCollision();
   }
-
   console.log(`pacman current position ${pacmanCurrentPosition}`);
 }
 
 // ........................GHOSTS.................................
-// need to ensure ghosts leave their "prison" first
+// function moveGhostChase() {
+// let pacTop = parseInt(pacMan.style.top);
+// let pacLeft = parseInt(pacMan.style.left);
+// let ghostTop = parseInt(ghost.style.top);
+// let ghostLeft = parseInt(ghost.style.left);
+
+// let verticalMovement = pacTop > ghostTop ? cellSize : -cellSize;
+// let horizontalMovement = pacLeft > ghostLeft ? cellSize : -cellSize;
+
+// // Decide whether to move vertically or horizontally based on which direction is closer
+// if (Math.abs(pacTop - ghostTop) > Math.abs(pacLeft - ghostLeft)) {
+//   if (!isWall(ghostLeft, ghostTop + verticalMovement)) {
+//     ghost.style.top = `${ghostTop + verticalMovement}px`;
+//   } else if (!isWall(ghostLeft + horizontalMovement, ghostTop)) {
+//     ghost.style.left = `${ghostLeft + horizontalMovement}px`;
+//   }
+// } else {
+//   if (!isWall(ghostLeft + horizontalMovement, ghostTop)) {
+//     ghost.style.left = `${ghostLeft + horizontalMovement}px`;
+//   } else if (!isWall(ghostLeft, ghostTop + verticalMovement)) {
+//     ghost.style.top = `${ghostTop + verticalMovement}px`;
+//   }
+// }
 
 function moveGhosts() {
   removeGhosts();
