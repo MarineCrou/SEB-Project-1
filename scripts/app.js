@@ -107,11 +107,6 @@ function createGrid() {
     cells.push(cell);
   });
 
-  addPacman(pacmanCurrentPosition);
-  addGhosts(blinkyStartPosition);
-  addGhosts(pinkyStartPosition);
-  addGhosts(clydeStartPosition);
-  addGhosts(inkyStartPosition);
   createDottedCells();
   addPowerDots(powerDotCells);
   totalDotsOnGrid();
@@ -437,7 +432,11 @@ function startGame() {
     isPlaying = true;
     console.log("Game has started");
     // ghosts start moving
-    addGhosts();
+    addPacman(pacmanCurrentPosition);
+    addGhosts(blinkyStartPosition);
+    addGhosts(pinkyStartPosition);
+    addGhosts(clydeStartPosition);
+    addGhosts(inkyStartPosition);
     setGhostInterval();
     addFruits();
     // pacman moves
