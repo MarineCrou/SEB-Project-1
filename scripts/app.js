@@ -342,30 +342,6 @@ function movePacman(event) {
 }
 
 // ........................GHOSTS.................................
-// function moveGhostChase() {
-// let pacTop = parseInt(pacMan.style.top);
-// let pacLeft = parseInt(pacMan.style.left);
-// let ghostTop = parseInt(ghost.style.top);
-// let ghostLeft = parseInt(ghost.style.left);
-
-// let verticalMovement = pacTop > ghostTop ? cellSize : -cellSize;
-// let horizontalMovement = pacLeft > ghostLeft ? cellSize : -cellSize;
-
-// // Decide whether to move vertically or horizontally based on which direction is closer
-// if (Math.abs(pacTop - ghostTop) > Math.abs(pacLeft - ghostLeft)) {
-//   if (!isWall(ghostLeft, ghostTop + verticalMovement)) {
-//     ghost.style.top = `${ghostTop + verticalMovement}px`;
-//   } else if (!isWall(ghostLeft + horizontalMovement, ghostTop)) {
-//     ghost.style.left = `${ghostLeft + horizontalMovement}px`;
-//   }
-// } else {
-//   if (!isWall(ghostLeft + horizontalMovement, ghostTop)) {
-//     ghost.style.left = `${ghostLeft + horizontalMovement}px`;
-//   } else if (!isWall(ghostLeft, ghostTop + verticalMovement)) {
-//     ghost.style.top = `${ghostTop + verticalMovement}px`;
-//   }
-// }
-
 function moveGhosts() {
   removeGhosts();
   ghosts.forEach((ghost) => {
