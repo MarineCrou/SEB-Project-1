@@ -3,6 +3,7 @@
 ## Introduction
 
 Welcome to the Pacman GA Edition, a modern twist on the classic Pacman game. In this edition, players embark on a nostalgic journey with a unique GA-themed twist. As always, the objective is for Pacman to devour all the pellets scattered across the board while evading the four iconic ghosts: Blinky, Pinky, Inky, and Clyde. Failure to do so risks losing one of Pacman's three precious lives. Crafted with HTML, CSS, and JavaScript, this game promises an engaging experience as players navigate through an original, GA-themed grid.
+Let's Play : https://marinecrou.github.io/SEB-Project-1/
 
 ## Installation Instructions
 
